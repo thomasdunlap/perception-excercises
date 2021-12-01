@@ -49,7 +49,7 @@ sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, EXA_L2)))
 
 # import functions from individual exercise files
 import l2_examples
-import l2_exercises
+#import l2_exercises
 import l1_examples
 import l1_exercises
 
@@ -77,6 +77,7 @@ datafile_iter = iter(datafile)  # initialize dataset iterator
 
 cnt_frame = 0
 det_performance_all = []  # used for exercises in C2-4
+
 while True:
     try:
         #################################
@@ -103,31 +104,31 @@ while True:
         lidar_name = dataset_pb2.LaserName.TOP
 
         # Exercise C1-3-1 : print no. of vehicles
-        # l1_exercises.print_no_of_vehicles(frame) 
+        l1_exercises.print_no_of_vehicles(frame) 
 
         # Example C1-3-2 : display camera image
-        # l1_examples.display_image(frame)
+        #l1_examples.display_image(frame)
 
         # Example C1-3-3 : print angle of vertical field of view
-        # l1_examples.print_vfov_lidar(frame, lidar_name)
+        #l1_examples.print_vfov_lidar(frame, lidar_name)
 
         # Example C1-5-1 : Load range image
-        # l1_examples.print_range_image_shape(frame, lidar_name)
+        #l1_examples.print_range_image_shape(frame, lidar_name)
 
         # Exercise C1-5-2 : Compute pitch angle resolution
         # l1_exercises.print_pitch_resolution(frame, lidar_name)
 
         # Example C1-5-3 : Retrieve maximum and minimum distance
-        # l1_examples.get_max_min_range(frame, lidar_name)
+        #l1_examples.get_max_min_range(frame, lidar_name)
 
         # Example C1-5-4 : Visualize range channel
-        # l1_examples.vis_range_channel(frame, lidar_name)
+        #l1_examples.vis_range_channel(frame, lidar_name)
 
         # Exercise C1-5-5 : Visualize intensity channel
-        # l1_exercises.vis_intensity_channel(frame, lidar_name)
+        #l1_exercises.vis_intensity_channel(frame, lidar_name)
 
         # Example C1-5-6 : Convert range image to 3D point-cloud
-        # l1_examples.range_image_to_point_cloud(frame, lidar_name)
+        #l1_examples.range_image_to_point_cloud(frame, lidar_name)
 
         #######
         ####### LESSON 1 EXERCISES & EXAMPLES  END #######
@@ -147,8 +148,8 @@ while True:
         configs.model = 'darknet'
 
         # Example C2-3-1 : Crop point cloud
-        # lidar_pcl = l1_examples.range_image_to_point_cloud(frame, lidar_name, True)
-        # cropped_pcl = l2_examples.crop_pcl(lidar_pcl, configs, False)
+        #lidar_pcl = l1_examples.range_image_to_point_cloud(frame, lidar_name, True)
+        #cropped_pcl = l2_examples.crop_pcl(lidar_pcl, configs, False)
 
         # Exercise C2-3-2 : Transform metric point coordinates to BEV space
         # l2_exercises.pcl_to_bev(cropped_pcl, configs)
@@ -180,6 +181,7 @@ while True:
     except StopIteration:
         # if StopIteration is raised, break from loop
         break
+
 
     # Exercise C2-4-5 : Compute precision and recall (part 2/2)
     # l2_exercises.compute_precision_recall(det_performance_all)

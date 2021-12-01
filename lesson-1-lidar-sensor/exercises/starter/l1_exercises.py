@@ -55,6 +55,6 @@ def print_no_of_vehicles(frame):
 
     # find out the number of labeled vehicles in the given frame
     # Hint: inspect the data structure frame.laser_labels
-    num_vehicles = 0
+    num_vehicles = sum(1 if label.type == label.TYPE_VEHICLE else 0 for label in frame.laser_labels )
             
     print("number of labeled vehicles in current frame = " + str(num_vehicles))
