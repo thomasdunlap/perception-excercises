@@ -31,7 +31,7 @@ def plot_precision_recall():
     #              by subsequently setting the variable configs.conf_thresh to the values 0.1 ... 0.9 and noted down the results.
     
     # Please create a 2d scatter plot of all precision/recall pairs 
-
+    pass
 
 
 # Exercise C2-3-4 : Compute precision and recall
@@ -59,25 +59,44 @@ def compute_precision_recall(det_performance_all, conf_thresh=0.5):
 def pcl_to_bev(lidar_pcl, configs, vis=True):
 
     # compute bev-map discretization by dividing x-range by the bev-image height
-
+    discrete_bev = (configs.lim_x[1] - configs.lim_x[0]) / configs.bev_height
+    
     # create a copy of the lidar pcl and transform all metrix x-coordinates into bev-image coordinates    
+    lidar_copy = np.copy(lidar_pcl)
+    lidar_copy[:, 0] = np.int_(np.floor(lidar_copy[:, 0] / discrete_bev))
 
     # transform all metrix y-coordinates as well but center the foward-facing x-axis on the middle of the image
+    lidar_copy[:, 1] = np.int_(np.floor(lidar_copy[:, 1] / discrete_bev) + (configs.bev_width + 1) / 2) 
 
     # shift level of ground plane to avoid flipping from 0 to 255 for neighboring pixels
+    lidar_copy[:, 2] = lidar_copy[:, 2] - configs.lim_z[0]
 
     # re-arrange elements in lidar_pcl_cpy by sorting first by x, then y, then by decreasing height
+    idx_h = np.lexsort( (-lidar_copy[:, 2], lidar_copy[:, 1], lidar_copy[:, 0]) )
+    lidar_sorted_h = lidar_copy[idx_h]
 
     # extract all points with identical x and y such that only the top-most z-coordinate is kept (use numpy.unique)
+    _, idx_h_unique = np.unique(lidar_sorted_h[:, 0:2], axis=0, return_index=True)
+    lidar_sorted_h = lidar_sorted_h[idx_h_unique]
 
     # assign the height value of each unique entry in lidar_top_pcl to the height map and 
     # make sure that each entry is normalized on the difference between the upper and lower height defined in the config file
-    
+    h_map = np.zeros((configs.bev_height + 1, configs.bev_width +1))
+    h_map[np.int_(lidar_sorted_h[:, 0]), np.int_(lidar_sorted_h[:, 1])] = lidar_sorted_h[:, 2] / float(np.abs(configs.lim_z[1] - configs.lim_z[0]))
+
     # sort points such that in case of identical BEV grid coordinates, the points in each grid cell are arranged based on their intensity
+    lidar_copy[lidar_copy[:,3] > 1.0, 3] = 1.0
+    idx_intens = np.lexsort((-lidar_copy[:, 3], lidar_copy[:, 1], lidar_copy[:, 0]))
+    lidar_copy = lidar_copy[idx_intens]
 
     # only keep one point per grid cell
+    _, idx_intens_unique = np.unique(lidar_copy[:, 0:2], axis=0, return_index=True)
+    lidar_sorted_intens = lidar_copy[idx_intens_unique]
 
     # create the intensity map
+    intensity_map = np.zeros((configs.bev_height + 1, configs.bev_width + 1))
+    intensity_map[np.int_(lidar_sorted_intens[:, 0]), np.int_(lidar_sorted_intens[:, 1])] = \
+        lidar_sorted_intens[:, 3] / (np.amax(lidar_sorted_intens[:, 3]) - np.amin(lidar_sorted_intens[:, 3]))
 
     # visualize intensity map
     #if vis:

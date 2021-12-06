@@ -151,7 +151,7 @@ def print_vfov_lidar(frame, lidar_name):
 
     # compute vertical field of view (vfov) in rad
     vfov_rad = calib_lidar.beam_inclination_max - calib_lidar.beam_inclination_min
-
+    print(len(calib_lidar.beam_inclinations))
     # compute and print vfov in degrees
     print(vfov_rad*180/np.pi)
 
